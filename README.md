@@ -14,3 +14,31 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+*** Lưu ý note:
+  * Code trong ngoặc []
+
+
+#Note by Hieu _____________________________________________________________________________________
+
+
+
+
+
+
+
+#Note by Tuyen _____________________________________________________________________________________
+
+
+
+
+
+
+
+
+#Note by @wTieen. w! _______________________________________________________________________________
+- Image.SVG:
+  + Terminal: --- [ flutter pub add flutter_svg ]
+  + Thêm thư viện --- [ import 'package:flutter_svg/flutter_svg.dart'; ]
+
