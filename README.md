@@ -38,7 +38,28 @@ samples, guidance on mobile development, and a full API reference.
 
 
 #Note by @wTieen. w! _______________________________________________________________________________
-- Image.SVG:
+
+< CÁC CÀI ĐẶT BÊN NGOÀI HỖ TRỢ FRONT-END >
+- Image.SVG
   + Terminal: --- [ flutter pub add flutter_svg ]
   + Thêm thư viện --- [ import 'package:flutter_svg/flutter_svg.dart'; ]
+
+
+< CHÚ THÍCH CÁC FILE >
+- file:
+  + HomePage, TodoPage --> trang giao diện.
+  + TodoTile --> task todo trong list TodoPage.
+
+
+< ĐƯỜNG DẪN CÁC FILE >
+
+-  LƯU Ý --- Thêm đường dẫn nên dẫn là  [ ../ ] hay cho [ package:Tên_thư_mục_của_project/ ] ---
+  VD: [ import 'package:clocknclock/util/todo_tile.dart'; ] to [ import '../util/todo_tile.dart'; ]
+
+- Pages
+  + Home Page --- [ import '../pages/HomePage.dart'; ]
+  + TodoPage --- [ import '../util/TodoTile.dart'; ]
+- Util
+  + TodoTile --- [ import '../util/todo_tile.dart'; ]
+
 
