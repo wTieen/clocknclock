@@ -1,6 +1,8 @@
+//add các thư viện của flutter
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+// add các link file cùng folder
 import '../pages/HomePage.dart';
 import '../util/todo_tile.dart';
 

@@ -1,11 +1,13 @@
-import 'package:clocknclock/data/database.dart';
+//add các thư viện của flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:numberpicker/numberpicker.dart';
 
+// add các link file cùng folder
 import '../pages/HomePage.dart';
 import '../util/todo_tile.dart';
 import '../util/dialog_box.dart';
+import '../data/database.dart';
 
 //bọc lớp State bằng Widget để có thể gọi sang file Homepage
 class TodoPage extends StatefulWidget {
@@ -14,7 +16,12 @@ class TodoPage extends StatefulWidget {
 }
 
 class TodoPageState extends State {
-  // reference the hive box -- hoong biet, nao biet thi Tieen se sua cmt nhe
+  var hour = 0;
+  var minute = 0;
+  var timeFormat = "AM";
+  DateTime _taskTime = DateTime.now();
+
+  // reference the hive box
   final _myBox = Hive.box('mybox');
   ToDoDataBase db = ToDoDataBase();
 
@@ -27,7 +34,6 @@ class TodoPageState extends State {
       // Dữ liệu đã tồn tại
       db.loadData();
     }
-
     super.initState();
   }
 
@@ -52,7 +58,7 @@ class TodoPageState extends State {
     db.updateDataBase();
   }
 
-  // Tạo theem mới task to do
+  // Tạo thêm mới task to do
   void createNewTask() {
     showDialog(
       context: context,
@@ -102,17 +108,11 @@ class TodoPageState extends State {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.grey,
-                              // minimumSize: const Size(185, 185),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30))),
                           child: const Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                // SvgPicture.asset('assets/images/icon_todo.svg'),
-                                // const Text(
-                                //   'To-Do',
-                                //   style: TextStyle(fontSize: 30),
-                                // )
                               ]),
                         ),
                       ),
@@ -120,25 +120,157 @@ class TodoPageState extends State {
                         height: 185,
                         width: 185,
                         child: ElevatedButton(
-                          onPressed: createNewTask,
+                          onPressed: () {
+                            createNewTask();
+                            if (timeFormat == 'PM') {
+                              hour += 12;
+                            }
+                            _taskTime = DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day,
+                                hour,
+                                minute);
+                            if (hour <= DateTime.now().hour) {
+                              _taskTime = _taskTime.add(Duration(days: 1));
+                            }
+                            // print(_taskTime);
+                          },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.black,
                               minimumSize: const Size(185, 185),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30))),
-                          child: const Column(
+                          child: Column(
+                              //----------------------------------------------- ------------------------------------------------------
                               mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.add, size: 100),
-                                // SvgPicture.asset('assets/images/icon_todo.svg'),
-                                Text(
-                                  'To-Do',
-                                  style: TextStyle(fontSize: 30),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      NumberPicker(
+                                        minValue: 0,
+                                        maxValue: 12,
+                                        value: hour,
+                                        zeroPad: true,
+                                        infiniteLoop: true,
+                                        itemWidth: 48,
+                                        itemHeight: 50,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            hour = value;
+                                          });
+                                        },
+                                        selectedTextStyle: const TextStyle(
+                                            color: Colors.black, fontSize: 30),
+                                        textStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 20),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                top: BorderSide(
+                                                    color: Colors.black),
+                                                bottom: BorderSide(
+                                                    color: Colors.black))),
+                                      ),
+                                      NumberPicker(
+                                        minValue: 0,
+                                        maxValue: 59,
+                                        value: minute,
+                                        zeroPad: true,
+                                        infiniteLoop: true,
+                                        itemWidth: 48,
+                                        itemHeight: 50,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            minute = value;
+                                          });
+                                        },
+                                        selectedTextStyle: const TextStyle(
+                                            color: Colors.black, fontSize: 30),
+                                        textStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 20),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                top: BorderSide(
+                                                    color: Colors.black),
+                                                bottom: BorderSide(
+                                                    color: Colors.black))),
+                                      ),
+                                      Column(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                timeFormat = "AM";
+                                              });
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 4,
+                                                      vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: timeFormat == "AM"
+                                                    ? Colors.blue.shade800
+                                                    : Colors.blue,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                              child: Text(
+                                                'AM',
+                                                style: TextStyle(
+                                                    color: timeFormat == "AM"
+                                                        ? Colors.white
+                                                        : Colors.white54,
+                                                    fontSize: 20),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  timeFormat = "PM";
+                                                });
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 4,
+                                                        vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: timeFormat == "PM"
+                                                      ? Colors.blue.shade800
+                                                      : Colors.blue,
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                child: Text(
+                                                  'PM',
+                                                  style: TextStyle(
+                                                      color: timeFormat == "PM"
+                                                          ? Colors.white
+                                                          : Colors.white54,
+                                                      fontSize: 20),
+                                                ),
+                                              ))
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 )
                               ]),
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Container(
@@ -153,6 +285,7 @@ class TodoPageState extends State {
                           return TodoTile(
                             taskName: db.toDoList[index][0],
                             taskStatus: db.toDoList[index][1],
+                            taskTime: "$hour:$minute",
                             onChanged: (value) => checkBoxChanged(value, index),
                             deleteFunction: (context) => deleteTask(index),
                           );
