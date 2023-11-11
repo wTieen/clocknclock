@@ -40,6 +40,8 @@ dependencies:
   flutter_svg: ^2.0.8
   flutter_slidable: ^1.2.0
   numberpicker: ^2.1.2
+  timer_builder: ^2.0.0
+
 
 dev_dependencies:
   flutter_test:

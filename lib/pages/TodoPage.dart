@@ -93,7 +93,7 @@ class TodoPageState extends State {
                     alignment: Alignment.center,
                     children: [
                       Container(
-                        color: Colors.grey,
+                        color: Colors.black,
                         height: 1080,
                         width: 321,
                         child: ElevatedButton(
@@ -109,7 +109,7 @@ class TodoPageState extends State {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.grey,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30))),
+                                  borderRadius: BorderRadius.circular(10))),
                           child: const Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -290,7 +290,11 @@ class TodoPageState extends State {
                             deleteFunction: (context) => deleteTask(index),
                           );
                         },
-                      ))
-                ])));
+                      )
+                  )
+                ]
+            )
+        )
+    );
   }
 }

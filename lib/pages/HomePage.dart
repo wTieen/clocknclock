@@ -4,8 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // add các link file cùng folder
 import '../pages/TodoPage.dart';
-
-import 'TodoPage.dart';
+import '../pages/ClockPage.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -24,7 +23,6 @@ class HomePage extends StatelessWidget {
                           builder: (context) => TodoPage(),
                         ),
                       );
-                      // print('ToDo: why you click me ?');
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -42,7 +40,12 @@ class HomePage extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      print('Clock: why you click me ?');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ClockPage(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow,
@@ -56,7 +59,8 @@ class HomePage extends StatelessWidget {
                         'Clock',
                         style: TextStyle(fontSize: 30),
                       )
-                    ]),
+                    ]
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {
