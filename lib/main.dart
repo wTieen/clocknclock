@@ -19,6 +19,6 @@ void main() async{
       routes: {
         "/": (context) => HomePage(),
       }
-      // home: SafeArea(child: Scaffold(body: Center(child: HomePage()))),
       ));
+
 }
