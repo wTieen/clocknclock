@@ -21,7 +21,7 @@ samples, guidance on mobile development, and a full API reference.
 
 
 #Note by Hieu _____________________________________________________________________________________
-- import 'dart:async'; vào trong file ClokPage.dart -->để tạo đc các hàm thời gian
+
 
 
 

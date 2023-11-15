@@ -1,0 +1,32 @@
+<svg width="25" height="28" viewBox="0 0 25 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="25" height="28" fill="#1E1E1E"/>
+<g id="Clock">
+<rect width="800" height="360" transform="translate(-500 -324)" fill="black"/>
+<g id="Frame 2">
+<rect width="479" height="360" transform="translate(-179 -324)" fill="black"/>
+<g id="Frame 3" clip-path="url(#clip0_49_121)">
+<g id="Bao Thuc">
+<path d="M-70 -10H60C66.0751 -10 71 -5.07513 71 1H69C69 -3.97056 64.9706 -8 60 -8H-70V-10ZM70 36H-70H70ZM-70 36V-9V36ZM60 -10C66.0751 -10 71 -5.07513 71 1V36H69V1C69 -3.97056 64.9706 -8 60 -8V-10Z" fill="white" mask="url(#path-1-inside-1_49_121)"/>
+<g id="Frame 10">
+<g id="vuesax/linear/timer">
+<g id="vuesax/linear/timer_2">
+<g id="timer">
+<path id="Vector" d="M23.875 15.125C23.875 21.404 18.779 26.5 12.5 26.5C6.221 26.5 1.125 21.404 1.125 15.125C1.125 8.846 6.221 3.75 12.5 3.75C18.779 3.75 23.875 8.846 23.875 15.125Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M12.5 8.30005V14.8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M12.5 14.8L17.0962 19.3962" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M1.32251 5.0498L8.07751 1.1498" stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_5" d="M16.9226 1.14966L23.6776 5.04966" stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_49_121">
+<rect width="479" height="45" fill="white" transform="translate(-179 -9)"/>
+</clipPath>
+</defs>
+</svg>

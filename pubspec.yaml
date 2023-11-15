@@ -109,6 +109,11 @@ flutter:
     - assets/images/icon_todo.svg
     - assets/images/icon_clock.svg
     - assets/images/icon_exit.svg
+    - assets/images/icon_time.svg
+    - assets/images/icon_alarm.svg
+    - assets/images/icon_stopwatch.svg
+    - assets/images/icon_timer.svg
+    - assets/images/icon_arrowDown.svg
     - assets/images/icon_analog_clock.png
     - assets/images/needle.png
     #--------------------------------------------

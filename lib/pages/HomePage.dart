@@ -1,5 +1,4 @@
 //add các thư viện của flutter
-import 'package:clocknclock/pages/ExitPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -13,6 +12,7 @@ class HomePage extends StatelessWidget {
     return SafeArea(
         child: Container(
             color: Colors.white,
+            width: double.maxFinite,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -65,12 +65,7 @@ class HomePage extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ExitPage(),
-                        ),
-                      );
+                      print('Exit: why you click me ?');
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -86,9 +81,6 @@ class HomePage extends StatelessWidget {
                       )
                     ]),
                   ),
-                ]
-            )
-        )
-    );
+                ])));
   }
 }

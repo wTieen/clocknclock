@@ -43,7 +43,7 @@ class TodoTile extends StatelessWidget {
             // Code Thiết kế task to do
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
-              minimumSize: const Size(500, 50),
+              minimumSize: const Size(double.maxFinite, 20),
               side: const BorderSide(width: 1, color: Colors.white),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -67,23 +67,23 @@ class TodoTile extends StatelessWidget {
               // Tên task to do
               Container(
                 padding:  const EdgeInsets.all(8),
-                  width: 330,
+                  width: 240,
                   child: Text(
                     taskName,
                     style: TextStyle(
                         overflow: TextOverflow.clip,
-                        fontSize: 20,
+                        fontSize: 16,
                         decoration: taskStatus
                             ? TextDecoration.lineThrough
                             : TextDecoration.none),
                   )),
-              const SizedBox(width: 10),
+              // const SizedBox(width: 10),
                Align(
                 alignment: Alignment.topRight,
                 child: Text(
                   '$taskTime PM',
                   style: const TextStyle(
-                    fontSize:15,
+                    fontSize:14,
                   ),
                 ),
               )
