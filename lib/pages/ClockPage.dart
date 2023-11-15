@@ -121,70 +121,8 @@ class ClockPageState extends State<ClockPage> {
                                       alignment: Alignment.topCenter,
                                       child: Column(
                                         children: [
-                                          DropdownButton<String>(
-                                              hint: const Text('Number clock',
-                                                  style: TextStyle(
-                                                      color: Colors.grey)),
-                                              underline: Container(),
-                                              icon: SvgPicture.asset(
-                                                  'assets/images/icon_arrowDown.svg'),
-                                              padding: const EdgeInsets.only(
-                                                  top: 20, left: 15, right: 25),
-                                              isExpanded: true,
-                                              dropdownColor: Colors.black,
-                                              style: const TextStyle(
-                                                  inherit: false,
-                                                  fontFamily: 'Mali',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16),
-                                              value: selectedValue,
-                                              items: dropdownItems
-                                                  .map((String value) {
-                                                return DropdownMenuItem<String>(
-                                                    value: value,
-                                                    child: Text(value));
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  selectedValue = newValue;
-                                                  if (newValue ==
-                                                      'Number clock') {
-                                                    _selectedClockType =
-                                                        ClockType.digital;
-                                                  } else if (newValue ==
-                                                      'Analog clock') {
-                                                    _selectedClockType =
-                                                        ClockType.hour;
-                                                  } else if (newValue ==
-                                                      'Old clock') {
-                                                    _selectedClockType =
-                                                        ClockType.classic;
-                                                  }
-                                                });
-                                              }),
-                                          ListTile(
-                                            contentPadding:
-                                                const EdgeInsets.only(
-                                                    left: 15, right: 10),
-                                            title: const Text("24 hour format",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontFamily: 'Mali')),
-                                            trailing: Switch(
-                                              value: valueSwitch[0],
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  valueSwitch[0] =
-                                                      !valueSwitch[0];
-                                                });
-                                              },
-                                              inactiveTrackColor: Colors.grey,
-                                              activeTrackColor: Colors.yellow,
-                                              activeColor: Colors.white,
-                                            ),
-                                          ),
-                                          //... (Other ListTile entries)
+                                          buildDropdownButton(),
+                                          buildTab1SwitchesColumn(),
                                         ],
                                       ),
                                     ),
@@ -194,64 +132,110 @@ class ClockPageState extends State<ClockPage> {
                                       child: Column(
                                         children: [
                                           const SizedBox(height: 15),
-                                          ListTile(
-                                            contentPadding:
-                                                const EdgeInsets.only(
-                                                    left: 15, right: 10),
-                                            title: const Text("Auto time",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontFamily: 'Mali')),
-                                            trailing: Switch(
-                                              value: valueSwitch[3],
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  valueSwitch[3] =
-                                                      !valueSwitch[3];
-                                                });
-                                              },
-                                              inactiveTrackColor: Colors.grey,
-                                              activeTrackColor: Colors.yellow,
-                                              activeColor: Colors.white,
-                                            ),
-                                          ),
-                                          //... (Other ListTile entries)
+                                          buildTab1SwitchesColumnRight(),
                                         ],
                                       ),
                                     )
                                   ],
                                 ),
                               ),
-                              //... (Content for other tabs)
+                              //tab 2222222222222222222222222222
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 1080,
+                                      width: 220,
+                                      alignment: Alignment.topCenter,
+                                      child: const Column(
+                                        children: [
+                                          Text('tab 2', style: TextStyle(color: Colors.white))
+                                          // buildTab1SwitchesColumn(),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 1080,
+                                      width: 220,
+                                      child: const Column(
+                                        children: [
+                                          SizedBox(height: 15),
+                                          Text('tab 2', style: TextStyle(color: Colors.white))
+                                          // buildTab1SwitchesColumnRight(),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              //tab 33333333333333333333333333
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 1080,
+                                      width: 220,
+                                      alignment: Alignment.topCenter,
+                                      child: Column(
+                                        children: [
+                                          buildDropdownButton(),
+                                          buildTab1SwitchesColumn(),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 1080,
+                                      width: 220,
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 15),
+                                          buildTab1SwitchesColumnRight(),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              //tab 44444444444444444
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 1080,
+                                      width: 220,
+                                      alignment: Alignment.topCenter,
+                                      child: const Column(
+                                        children: [
+                                          Text('tab 4', style: TextStyle(color: Colors.white))
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 1080,
+                                      width: 220,
+                                      child: const Column(
+                                        children: [
+                                          SizedBox(height: 15),
+                                          Text('tab 4', style: TextStyle(color: Colors.white))
+                                          // buildTab1SwitchesColumnRight(),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+
+
+
+
+
                             ],
                           ),
                         ),
-                        TabBar(
-                          tabs: [
-                            Tab(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon_time.svg'),
-                            ),
-                            Tab(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon_alarm.svg'),
-                            ),
-                            Tab(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon_stopwatch.svg'),
-                            ),
-                            Tab(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon_timer.svg'),
-                            ),
-                          ],
-                          indicator: const BoxDecoration(
-                            border: Border(
-                                top: BorderSide(
-                                    color: Colors.white, width: 2.0)),
-                          ),
-                        )
+                        buildTabBar(),
                       ],
                     ),
                   )
@@ -263,6 +247,112 @@ class ClockPageState extends State<ClockPage> {
       ),
     );
   }
+
+  Widget buildDropdownButton() {
+    return Container(
+      // height: 1080,
+      width: 230,
+      alignment: Alignment.topCenter,
+      child: Column(
+        children: [
+          DropdownButton<String>(
+            hint: const Text('Number clock',
+                style: TextStyle(color: Colors.grey)),
+            underline: Container(),
+            icon: SvgPicture.asset('assets/images/icon_arrowDown.svg'),
+            padding: const EdgeInsets.only(top: 20, left: 15, right: 30),
+            isExpanded: true,
+            dropdownColor: Colors.black,
+            style: const TextStyle(
+              inherit: false,
+              fontFamily: 'Mali',
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+            ),
+            value: selectedValue,
+            items: dropdownItems.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedValue = newValue!;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTabBar() {
+    return TabBar(
+      tabs: [
+        Tab(icon: SvgPicture.asset('assets/images/icon_time.svg')),
+        Tab(icon: SvgPicture.asset('assets/images/icon_alarm.svg')),
+        Tab(icon: SvgPicture.asset('assets/images/icon_stopwatch.svg')),
+        Tab(icon: SvgPicture.asset('assets/images/icon_timer.svg')),
+      ],
+      indicatorColor: Colors.yellow,
+      // ),
+    );
+  }
+
+  Widget buildTab1SwitchesColumn() {
+    return Container(
+      width: 220,
+      child: Column(
+        children: [
+          buildSwitchListTile('24 hour format', 0),
+          buildSwitchListTile('Seconds', 1),
+          buildSwitchListTile('Music', 2),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTab1SwitchesColumnRight() {
+    return Container(
+      // height: 1080,
+      width: 220,
+      child: Column(
+        children: [
+          buildSwitchListTile('Auto time', 3),
+          buildSwitchListTile('Auto time-zone', 4),
+          buildSwitchListTile('Todo list', 5),
+          buildSwitchListTile('Mascot', 6),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSwitchListTile(String title, int index) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 15, top: 4, right: 10),
+      title: Text(
+        title,
+        style: const TextStyle(
+            color: Colors.white, fontSize: 16, fontFamily: 'Mali'),
+      ),
+      trailing: Switch(
+        value: valueSwitch[index],
+        onChanged: (value) {
+          setState(() {
+            valueSwitch[index] = !valueSwitch[index];
+          });
+        },
+        inactiveTrackColor: Colors.grey,
+        activeTrackColor: Colors.yellow,
+        activeColor: Colors.white,
+      ),
+    );
+  }
+
+
+
+
 }
 
 class ClockExpansionTile extends StatefulWidget {
