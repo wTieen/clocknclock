@@ -358,10 +358,11 @@ class TodoPageState extends State<TodoPage> {
       deleteFunction: (BuildContext ) {  },
       onChanged: (BuildContext ) {  },
     );
-
+    _controller.clear();
     await dbHelper.insertTask(newTask);
     _getTasks();
     Navigator.of(context).pop();
+
   }
 
   @override

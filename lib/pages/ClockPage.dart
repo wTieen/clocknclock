@@ -146,23 +146,22 @@ class ClockPageState extends State<ClockPage> {
                                   children: [
                                     Container(
                                       height: 1080,
-                                      width: 220,
+                                      width: 200,
                                       alignment: Alignment.topCenter,
                                       child: const Column(
                                         children: [
                                           Text('tab 2', style: TextStyle(color: Colors.white))
-                                          // buildTab1SwitchesColumn(),
+                                          // buildTab2SwitchesColumn(),
                                         ],
                                       ),
                                     ),
                                     Container(
                                       height: 1080,
-                                      width: 220,
-                                      child: const Column(
+                                      width: 240,
+                                      child: Column(
                                         children: [
-                                          SizedBox(height: 15),
-                                          Text('tab 2', style: TextStyle(color: Colors.white))
-                                          // buildTab1SwitchesColumnRight(),
+                                          const SizedBox(height: 15),
+                                          buildTab2SwitchesColumnRight(),
                                         ],
                                       ),
                                     )
@@ -210,6 +209,7 @@ class ClockPageState extends State<ClockPage> {
                                       child: const Column(
                                         children: [
                                           Text('tab 4', style: TextStyle(color: Colors.white))
+                                          // buildTab4SwitchesColumn(),
                                         ],
                                       ),
                                     ),
@@ -220,7 +220,7 @@ class ClockPageState extends State<ClockPage> {
                                         children: [
                                           SizedBox(height: 15),
                                           Text('tab 4', style: TextStyle(color: Colors.white))
-                                          // buildTab1SwitchesColumnRight(),
+                                          // buildTab4SwitchesColumnRight(),
                                         ],
                                       ),
                                     )
@@ -300,6 +300,30 @@ class ClockPageState extends State<ClockPage> {
     );
   }
 
+  Widget buildSwitchListTile(String title, int index) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 15, top: 4, right: 10),
+      title: Text(
+        title,
+        style: const TextStyle(
+            color: Colors.white, fontSize: 16, fontFamily: 'Mali'),
+      ),
+      trailing: Switch(
+        value: valueSwitch[index],
+        onChanged: (value) {
+          setState(() {
+            valueSwitch[index] = !valueSwitch[index];
+          });
+        },
+        inactiveTrackColor: Colors.grey,
+        activeTrackColor: Colors.yellow,
+        activeColor: Colors.white,
+      ),
+    );
+  }
+
+  // conten tab 1 + 3
+
   Widget buildTab1SwitchesColumn() {
     return Container(
       width: 220,
@@ -328,28 +352,65 @@ class ClockPageState extends State<ClockPage> {
     );
   }
 
-  Widget buildSwitchListTile(String title, int index) {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 15, top: 4, right: 10),
-      title: Text(
-        title,
-        style: const TextStyle(
-            color: Colors.white, fontSize: 16, fontFamily: 'Mali'),
-      ),
-      trailing: Switch(
-        value: valueSwitch[index],
-        onChanged: (value) {
-          setState(() {
-            valueSwitch[index] = !valueSwitch[index];
-          });
-        },
-        inactiveTrackColor: Colors.grey,
-        activeTrackColor: Colors.yellow,
-        activeColor: Colors.white,
+  // conten tab 2
+
+  Widget buildTab2SwitchesColumn() {
+    return Container(
+      width: 220,
+      child: Column(
+        children: [
+          buildSwitchListTile('24 hour format', 0),
+          buildSwitchListTile('Seconds', 1),
+          buildSwitchListTile('Music', 2),
+        ],
       ),
     );
   }
 
+  Widget buildTab2SwitchesColumnRight() {
+    return Container(
+      // height: 1080,
+      width: 220,
+      child: Column(
+        children: [
+          buildSwitchListTile('Sound', 3),
+          buildSwitchListTile('Quiver', 4),
+          buildSwitchListTile('Snooze', 5),
+          buildSwitchListTile('Repeat', 6),
+        ],
+      ),
+    );
+  }
+
+  //conten tab 4
+
+  Widget buildTab4SwitchesColumn() {
+    return Container(
+      width: 220,
+      child: Column(
+        children: [
+          buildSwitchListTile('24 hour format', 0),
+          buildSwitchListTile('Seconds', 1),
+          buildSwitchListTile('Music', 2),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTab4SwitchesColumnRight() {
+    return Container(
+      // height: 1080,
+      width: 220,
+      child: Column(
+        children: [
+          buildSwitchListTile('Auto time', 3),
+          buildSwitchListTile('Auto time-zone', 4),
+          buildSwitchListTile('Todo list', 5),
+          buildSwitchListTile('Mascot', 6),
+        ],
+      ),
+    );
+  }
 
 
 
@@ -565,7 +626,7 @@ class _HourClockWidgetState extends State<HourClockWidget> {
     return Container(
       width: 200.0,
       height: 200.0,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.black,
         image: DecorationImage(
