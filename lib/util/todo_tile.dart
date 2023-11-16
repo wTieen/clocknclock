@@ -152,7 +152,7 @@ class TodoTile extends StatelessWidget {
         ],
       ),
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         child: OutlinedButton(
           // Code Thiết kế task to do
             style: OutlinedButton.styleFrom(

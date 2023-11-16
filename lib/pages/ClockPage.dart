@@ -12,7 +12,8 @@ class ClockPage extends StatefulWidget {
 }
 
 class ClockPageState extends State<ClockPage> {
-  List<bool> valueSwitch = [false, false, false, false, false, false, false];
+  List<bool> valueSwitch = [false, false, true, false, false, false, true];
+  List<bool> valueclock = [false, true, false, false, true, false, false];
   bool isSelected = false;
   final GlobalKey<_ClockExpansionTileState> _expansionTileKey =
       GlobalKey<_ClockExpansionTileState>();
@@ -144,15 +145,12 @@ class ClockPageState extends State<ClockPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      height: 1080,
-                                      width: 200,
-                                      alignment: Alignment.topCenter,
-                                      child: const Column(
-                                        children: [
-                                          Text('tab 2', style: TextStyle(color: Colors.white))
-                                          // buildTab2SwitchesColumn(),
-                                        ],
+                                    SingleChildScrollView(
+                                      child: Container(
+                                        // height: 1080,
+                                        width: 200,
+                                        alignment: Alignment.topCenter,
+                                        child: buildAlarmColumn(),
                                       ),
                                     ),
                                     Container(
@@ -202,36 +200,27 @@ class ClockPageState extends State<ClockPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      height: 1080,
-                                      width: 220,
-                                      alignment: Alignment.topCenter,
-                                      child: const Column(
-                                        children: [
-                                          Text('tab 4', style: TextStyle(color: Colors.white))
-                                          // buildTab4SwitchesColumn(),
-                                        ],
+                                    SingleChildScrollView(
+                                      child: Container(
+                                        // height: 1080,
+                                        width: 200,
+                                        alignment: Alignment.topCenter,
+                                        child: buildTimerColumn(),
                                       ),
                                     ),
                                     Container(
                                       height: 1080,
-                                      width: 220,
-                                      child: const Column(
+                                      width: 240,
+                                      child: Column(
                                         children: [
-                                          SizedBox(height: 15),
-                                          Text('tab 4', style: TextStyle(color: Colors.white))
-                                          // buildTab4SwitchesColumnRight(),
+                                          const SizedBox(height: 15),
+                                          buildTab2SwitchesColumnRight(),
                                         ],
                                       ),
                                     )
                                   ],
                                 ),
                               ),
-
-
-
-
-
                             ],
                           ),
                         ),
@@ -244,6 +233,67 @@ class ClockPageState extends State<ClockPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTimerColumn() {
+    return Container(
+      width: 200,
+      child: const Column(
+        children: [
+          Text('05:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('10:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('20:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('30:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('35:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('40:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('45:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('50:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('55:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+          Text('59:00', style: TextStyle(fontSize: 32, color: Colors.white,)),
+        ],
+      ),
+    );
+  }
+
+  Widget buildAlarmColumn() {
+    return Container(
+      width: 200,
+      child: Column(
+        children: [
+          buildClockListTile('00:23', 0),
+          buildClockListTile('04:00', 1),
+          buildClockListTile('06:12', 2),
+          buildClockListTile('12:23', 3),
+          buildClockListTile('01:01', 4),
+          buildClockListTile('05:12', 5),
+          buildClockListTile('09:23', 6),
+          buildClockListTile('11:00', 1),
+          buildClockListTile('12:12', 2),
+        ],
+      ),
+    );
+  }
+
+  Widget buildClockListTile(String title, int index) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 15, top: 4, right: 10),
+      title: Text(
+        title,
+        style: const TextStyle(
+            color: Colors.white, fontSize: 16, fontFamily: 'Mali'),
+      ),
+      trailing: Switch(
+        value: valueclock[index],
+        onChanged: (value) {
+          setState(() {
+            valueclock[index] = !valueclock[index];
+          });
+        },
+        inactiveTrackColor: Colors.grey,
+        activeTrackColor: Colors.yellow,
+        activeColor: Colors.white,
       ),
     );
   }
@@ -411,9 +461,6 @@ class ClockPageState extends State<ClockPage> {
       ),
     );
   }
-
-
-
 }
 
 class ClockExpansionTile extends StatefulWidget {

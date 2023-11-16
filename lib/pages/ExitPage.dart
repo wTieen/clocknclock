@@ -1,117 +1,73 @@
-//add các thư viện của flutter
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// add các link file cùng folder
-import '../pages/HomePage.dart';
-
-class ClockPage extends StatefulWidget {
-  @override
-  ClockPageState createState() => ClockPageState();
-}
-
-class ClockPageState extends State {
-  List<bool> valueSwitch = [false, false, false, false, false, false, false];
-  bool isSelected = false;
-
-  void itemSwitch(bool value) {
-    setState(() {
-      isSelected = !isSelected;
-    });
-  }
-
-  String? selectedValue;
-  List<String> dropdownItems = ['Number clock', 'Analog clock', 'Old clock'];
-
+class ExitPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: DefaultTabController(
-            length: 4,
+    // Lấy thời gian hiện tại
+    DateTime now = DateTime.now();
 
+    // Kiểm tra thời gian để chọn hình ảnh phù hợp
+    // Cứ 4 tiếng hình nền thay đổi 1 lần
+    String imagePath;
+    if (now.hour >= 0 && now.hour < 4) {
+      imagePath = 'assets/images/hinh_nen_1.gif';
+    }
+    else if (now.hour >= 4 && now.hour < 8) {
+      imagePath = 'assets/images/hinh_nen_2.gif';
+    }
+    else if (now.hour >= 8 && now.hour < 12) {
+      imagePath = 'assets/images/hinh_nen_3.gif';
+    }
+    else if (now.hour >= 12 && now.hour < 16) {
+      imagePath = 'assets/images/hinh_nen_4.gif';
+    }
+    else if (now.hour >= 16 && now.hour < 20) {
+      imagePath = 'assets/images/hinh_nen_5.gif';
+    }
+    else {
+      imagePath = 'assets/images/hinh_nen_6.gif';
+    }
+    //Chưa xét trường hợp nếu các ảnh bị lỗi thì sao (-_-)?
 
-            child: Scaffold(
-                body: Container(
-
-
-
+    return Scaffold(
+      body: Container(
+        color: Colors.black,
+        child: Center(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+              ),
+              Positioned(
+                bottom: 5,
+                right: 250,
+                child: GestureDetector(
+                  onTap: () {
+                    print('out');
+                    // Chuyển về màn hình chính
+                    Navigator.pop(context);
+                  },
                   child: Container(
-                    color: Colors.black,
-                    child: Column(
-                      children: [
-                        const TabBar(
-                          tabs: [
-
-                            Tab(text: 'Tab 1'),
-                            Tab(text: 'Tab 2'),
-                            Tab(text: 'Tab 3'),
-                            Tab(text: 'Tab 4'),
-                          ],
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              // Nội dung của Tab 1
-                              Container(
-                                  alignment: Alignment.center,
-                                child: const Text('Content for Tab 2', style: TextStyle(color: Colors.white)),
-                              ),
-
-                              // Nội dung của Tab 2
-                              Container(
-                                alignment: Alignment.center,
-                                child: const Text('Content for Tab 2', style: TextStyle(color: Colors.white)),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                child: const Text('Content for Tab 3', style: TextStyle(color: Colors.white)),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                child: const Text('Content for Tab 4', style: TextStyle(color: Colors.white)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Icon(
+                      Icons.home,
+                      color: Colors.black,
+                      size: 60,
                     ),
                   ),
-
-
-
-
-
-
-
-
-                )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            ))
-
-
-
-
-
-
-
-
-
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
