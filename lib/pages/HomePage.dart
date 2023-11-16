@@ -1,5 +1,8 @@
 //add các thư viện của flutter
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // add các link file cùng folder
@@ -65,7 +68,7 @@ class HomePage extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      print('Exit: why you click me ?');
+                        exit(0);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

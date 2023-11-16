@@ -157,7 +157,7 @@ class TodoTile extends StatelessWidget {
           // Code Thiết kế task to do
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
-              minimumSize: const Size(double.maxFinite, 20),
+              minimumSize: const Size(double.maxFinite, 10),
               side: const BorderSide(width: 1, color: Colors.white),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
