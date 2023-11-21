@@ -118,6 +118,9 @@ flutter:
     - assets/images/icon_arrowDown.svg
     - assets/images/icon_analog_clock.png
     - assets/images/needle.png
+    - assets/images/classic_clock_hour.png
+    - assets/images/classic_clock_minute.png
+    - assets/images/classic_clock_second.png
     #--------------------------------------------
     - assets/images/hinh_nen_1.gif
     - assets/images/hinh_nen_2.gif

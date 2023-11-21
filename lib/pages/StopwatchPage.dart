@@ -5,18 +5,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../data/database_time.dart';
 import '../pages/HomePage.dart';
-import '../pages/StopwatchPage.dart';
+import '../pages/ClockPage.dart';
 import '../pages/AlarmPage.dart';
 import '../pages/TimerPage.dart';
 
 enum ClockType { hour, digital, classic }
 
-class ClockPage extends StatefulWidget {
+class StopwatchPage extends StatefulWidget {
   @override
-  ClockPageState createState() => ClockPageState();
+  StopwatchPageState createState() => StopwatchPageState();
 }
 
-class ClockPageState extends State<ClockPage> {
+class StopwatchPageState extends State<StopwatchPage> {
   // bool isSelected = false;
   final GlobalKey<_ClockExpansionTileState> _expansionTileKey =
       GlobalKey<_ClockExpansionTileState>();
@@ -25,6 +25,11 @@ class ClockPageState extends State<ClockPage> {
   // String? selectedValue;
   List<String> dropdownItems = ['Number clock', 'Analog clock', 'Old clock'];
 
+  // void itemSwitch(bool value) {
+  //   setState(() {
+  //     isSelected = !isSelected;
+  //   });
+  // }
 // thêm tập key and value
   final Map<String, bool> switches = {
     '24 hour format': false,
@@ -103,64 +108,63 @@ class ClockPageState extends State<ClockPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          color: Colors.black,
-                          height: 1080,
-                          width: 300,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                      child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        color: Colors.black,
+                        height: 1080,
+                        width: 300,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(),
                               ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            child: null,
                           ),
+                          child: null,
                         ),
-                        Container(
-                          height: 165,
-                          width: 165,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NewScreen(
-                                    selectedClockType: _selectedClockType,
-                                    // updateTextValue(''),
-                                  ),
+                      ),
+                      Container(
+                        height: 165,
+                        width: 165,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NewScreen(
+                                  selectedClockType: _selectedClockType,
+                                  // updateTextValue(''),
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow,
-                              foregroundColor: Colors.black,
-                              minimumSize: const Size(165, 165),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
                               ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                            foregroundColor: Colors.black,
+                            minimumSize: const Size(165, 165),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            child: _selectedClockType == ClockType.digital
-                                ? RunningDigitalClock()
-                                : (_selectedClockType == ClockType.hour
-                                ? HourClockWidget()
-                                : ClassicClockWidget()),
                           ),
+                          child: _selectedClockType == ClockType.digital
+                              ? RunningDigitalClock()
+                              : (_selectedClockType == ClockType.hour
+                              ? HourClockWidget()
+                              : ClassicClockWidget()),
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    ],
+                  )),
                   Container(
                       color: Colors.black,
                       height: 1080,
@@ -218,10 +222,11 @@ class ClockPageState extends State<ClockPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
-            minimumSize: const Size(140, 45),
+            minimumSize: const Size(100, 45),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: const BorderSide(color: Colors.white, width: 2)),
+              borderRadius: BorderRadius.circular(10),
+              // side: const BorderSide(color: Colors.white, width: 2)
+            ),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_time.svg'),
@@ -261,11 +266,10 @@ class ClockPageState extends State<ClockPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
-            minimumSize: const Size(100, 45),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-                    // , side: const BorderSide(color: Colors.white, width: 2)
-                    ),
+            minimumSize: const Size(140, 45),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: const BorderSide(color: Colors.white, width: 2)),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_stopwatch.svg'),
@@ -344,6 +348,19 @@ class ClockPageState extends State<ClockPage> {
     );
   }
 
+  Widget buildTabBar() {
+    return TabBar(
+      tabs: [
+        Tab(icon: SvgPicture.asset('assets/images/icon_time.svg')),
+        Tab(icon: SvgPicture.asset('assets/images/icon_alarm.svg')),
+        Tab(icon: SvgPicture.asset('assets/images/icon_stopwatch.svg')),
+        Tab(icon: SvgPicture.asset('assets/images/icon_timer.svg')),
+      ],
+      indicatorColor: Colors.yellow,
+      // ),
+    );
+  }
+
   Widget buildSwitchListTile(String title) {
     return ListTile(
         contentPadding: const EdgeInsets.only(left: 15, top: 4, right: 10),
@@ -371,7 +388,7 @@ class ClockPageState extends State<ClockPage> {
       width: 220,
       child: Column(
         children: [
-          buildSwitchListTile('24 hour'),
+          buildSwitchListTile('24 hour format'),
           buildSwitchListTile('Seconds'),
           buildSwitchListTile('Music'),
         ],
@@ -393,8 +410,6 @@ class ClockPageState extends State<ClockPage> {
       ),
     );
   }
-
-// conten tab 2
 }
 
 class ClockExpansionTile extends StatefulWidget {
@@ -423,12 +438,6 @@ class _ClockExpansionTileState extends State<ClockExpansionTile> {
       _isExpanded = true;
     });
   }
-
-  // void collapse() {
-  //   setState(() {
-  //     _isExpanded = false;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
