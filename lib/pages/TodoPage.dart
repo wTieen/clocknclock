@@ -299,7 +299,6 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import '../pages/HomePage.dart';
@@ -384,7 +383,6 @@ class TodoPageState extends State<TodoPage> {
                     width: 300,
                     child: ElevatedButton(
                       onPressed: () {
-                        print('OutToDo: why you click me ?');
                         Navigator.push(
                           context,
                           MaterialPageRoute(

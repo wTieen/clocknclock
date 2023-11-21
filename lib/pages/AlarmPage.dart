@@ -1,21 +1,62 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../data/database_time.dart';
+import '../data/databaseAlarm.dart';
+import '../data/database_alarm.dart';
+
+import '../util/alarm_tile.dart';
+import '../util/dialog_box.dart';
 import '../pages/HomePage.dart';
+import '../pages/ClockPage.dart';
 import '../pages/StopwatchPage.dart';
-import '../pages/AlarmPage.dart';
 import '../pages/TimerPage.dart';
 
 enum ClockType { hour, digital, classic }
 
-class ClockPage extends StatefulWidget {
+class AlarmPage extends StatefulWidget {
   @override
-  ClockPageState createState() => ClockPageState();
+  AlarmPageState createState() => AlarmPageState();
 }
 
-class ClockPageState extends State<ClockPage> {
+class AlarmPageState extends State<AlarmPage> {
+  var hour = 10;
+  var minute = 0;
+  var timeFormat = "AM";
+  DateTime _taskTime = DateTime.now();
+
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+  List<AlarmTile> tasks = [];
+  final _controller = TextEditingController();
+
+  void saveNewTask() async {
+    AlarmTile newTask = AlarmTile(
+      taskName: _controller.text,
+      taskTime: '$hour : $minute',
+      taskStatus: false,
+      deleteFunction: (BuildContext) {},
+      onChanged: (BuildContext) {},
+    );
+    _controller.clear();
+    await dbHelper.insertTask(newTask);
+    _getTasks();
+    Navigator.of(context).pop();
+  }
+
+  void createNewTask() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller,
+          onSave: saveNewTask,
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      },
+    );
+  }
+
   // bool isSelected = false;
   final GlobalKey<_ClockExpansionTileState> _expansionTileKey =
       GlobalKey<_ClockExpansionTileState>();
@@ -40,6 +81,12 @@ class ClockPageState extends State<ClockPage> {
   void initState() {
     super.initState();
     loadData();
+    _getTasks();
+  }
+
+  void _getTasks() async {
+    tasks = await dbHelper.getAllTasks();
+    setState(() {});
   }
 
   Future<void> loadData() async {
@@ -124,7 +171,10 @@ class ClockPageState extends State<ClockPage> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            child: null,
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [],
+                            ),
                           ),
                         ),
                         Container(
@@ -132,15 +182,20 @@ class ClockPageState extends State<ClockPage> {
                           width: 165,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NewScreen(
-                                    selectedClockType: _selectedClockType,
-                                    // updateTextValue(''),
-                                  ),
-                                ),
+                              createNewTask();
+                              if (timeFormat == 'PM') {
+                                hour += 12;
+                              }
+                              _taskTime = DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day,
+                                hour,
+                                minute,
                               );
+                              if (hour <= DateTime.now().hour) {
+                                _taskTime = _taskTime.add(Duration(days: 1));
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.yellow,
@@ -150,36 +205,131 @@ class ClockPageState extends State<ClockPage> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            child: _selectedClockType == ClockType.digital
-                                ? RunningDigitalClock()
-                                : (_selectedClockType == ClockType.hour
-                                    ? HourClockWidget()
-                                    : const Text(
-                                        'Old clock',
-                                        style: TextStyle(
-                                            fontSize: 24, color: Colors.black),
-                                      )),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      NumberPicker(
+                                        minValue: 0,
+                                        maxValue: 23,
+                                        value: hour,
+                                        zeroPad: true,
+                                        infiniteLoop: true,
+                                        itemWidth: 48,
+                                        itemHeight: 50,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            hour = value;
+                                          });
+                                        },
+                                        selectedTextStyle: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 30,
+                                        ),
+                                        textStyle: const TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 16,
+                                        ),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            top:
+                                                BorderSide(color: Colors.black),
+                                            bottom:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      NumberPicker(
+                                        minValue: 0,
+                                        maxValue: 59,
+                                        value: minute,
+                                        zeroPad: true,
+                                        infiniteLoop: true,
+                                        itemWidth: 48,
+                                        itemHeight: 50,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            minute = value;
+                                          });
+                                        },
+                                        selectedTextStyle: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 30,
+                                        ),
+                                        textStyle: const TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 16,
+                                        ),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            top:
+                                                BorderSide(color: Colors.black),
+                                            bottom:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                      color: Colors.black,
-                      height: 1080,
-                      width: 440,
-                      alignment: Alignment.bottomCenter,
-                      child: Column(children: [
-                        Row(children: [
+                    color: Colors.black,
+                    height: 1080,
+                    width: 440,
+                    alignment: Alignment.bottomCenter,
+                    child: Column(children: [
+                      Row(
+                        children: [
                           Container(
-                            // height: ,
+                            height:260,
                             width: 220,
                             alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                buildDropdownButton(),
-                                buildTab1SwitchesColumn(),
-                              ],
+                            child: Container(
+                              color: Colors.black,
+                              height: 300,
+                              width: 440,
+                              padding: EdgeInsets.all(4),
+                              child: ListView.builder(
+                                itemCount: tasks.length,
+                                itemBuilder: (context, index) {
+                                  AlarmTile task = tasks[index];
+                                  return AlarmTile(
+                                    taskName: task.taskName,
+                                    taskStatus: task.taskStatus,
+                                    taskTime: task.taskTime,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        task.taskStatus = !task.taskStatus;
+                                        dbHelper.updateTask(task);
+                                        _getTasks();
+                                      });
+                                    },
+                                    deleteFunction: (context) {
+                                      setState(() {
+                                        dbHelper.deleteTask(task.id);
+                                        _getTasks();
+                                      });
+                                    },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           Container(
@@ -188,14 +338,16 @@ class ClockPageState extends State<ClockPage> {
                             alignment: Alignment.topCenter,
                             child: Column(
                               children: [
-                                buildTab1SwitchesColumnRight(),
+                                buildTab2SwitchesColumnRight(),
                               ],
                             ),
                           ),
-                        ]),
-                        const SizedBox(height: 25),
-                        tabButton(),
-                      ])),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      tabButton(),
+                    ]),
+                  ),
                 ],
               ),
             ),
@@ -221,10 +373,11 @@ class ClockPageState extends State<ClockPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
-            minimumSize: const Size(140, 45),
+            minimumSize: const Size(100, 45),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: const BorderSide(color: Colors.white, width: 2)),
+              borderRadius: BorderRadius.circular(10),
+              // side: const BorderSide(color: Colors.white, width: 2)
+            ),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_time.svg'),
@@ -242,11 +395,10 @@ class ClockPageState extends State<ClockPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
-            minimumSize: const Size(100, 45),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-                    // , side: const BorderSide(color: Colors.white, width: 2)
-                    ),
+            minimumSize: const Size(140, 45),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: const BorderSide(color: Colors.white, width: 2)),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_alarm.svg'),
@@ -331,14 +483,7 @@ class ClockPageState extends State<ClockPage> {
             onChanged: (newValue) {
               setState(() {
                 textValue = newValue!;
-                // Thực hiện xử lý khi giá trị thay đổi
-                if (newValue == 'Number clock') {
-                  _selectedClockType = ClockType.digital;
-                } else if (newValue == 'Analog clock') {
-                  _selectedClockType = ClockType.hour;
-                } else if (newValue == 'Old clock') {
-                  _selectedClockType = ClockType.classic;
-                }
+                updateTextValue(textValue);
               });
             },
           ),
@@ -349,32 +494,30 @@ class ClockPageState extends State<ClockPage> {
 
   Widget buildSwitchListTile(String title) {
     return ListTile(
-        contentPadding: const EdgeInsets.only(left: 15, top: 4, right: 10),
-        title: Text(
-          title,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 16, fontFamily: 'Mali'),
-        ),
-        trailing: Transform.scale(
-          scale: 0.8,
-          child: Switch(
-            value: switches[title] ?? false,
-            onChanged: (value) => updateSwitchState(title, value),
-            inactiveTrackColor: Colors.grey,
-            activeTrackColor: Colors.yellow,
-            activeColor: Colors.white,
-          ),
-        ));
+      contentPadding: const EdgeInsets.only(left: 15, top: 4, right: 10),
+      title: Text(
+        title,
+        style: const TextStyle(
+            color: Colors.white, fontSize: 16, fontFamily: 'Mali'),
+      ),
+      trailing: Switch(
+        value: switches[title] ?? false,
+        onChanged: (value) => updateSwitchState(title, value),
+        inactiveTrackColor: Colors.grey,
+        activeTrackColor: Colors.yellow,
+        activeColor: Colors.white,
+      ),
+    );
   }
 
-  // conten tab 1 + 3
+  // conten tab 2
 
-  Widget buildTab1SwitchesColumn() {
+  Widget buildTab2SwitchesColumn() {
     return Container(
       width: 220,
       child: Column(
         children: [
-          buildSwitchListTile('24 hour'),
+          buildSwitchListTile('24 hour format'),
           buildSwitchListTile('Seconds'),
           buildSwitchListTile('Music'),
         ],
@@ -382,22 +525,20 @@ class ClockPageState extends State<ClockPage> {
     );
   }
 
-  Widget buildTab1SwitchesColumnRight() {
+  Widget buildTab2SwitchesColumnRight() {
     return Container(
       // height: 1080,
       width: 220,
       child: Column(
         children: [
-          buildSwitchListTile('Auto time'),
-          buildSwitchListTile('Auto time-zone'),
-          buildSwitchListTile('Todo list'),
-          buildSwitchListTile('Mascot'),
+          buildSwitchListTile('Sound'),
+          buildSwitchListTile('Quiver'),
+          buildSwitchListTile('Snooze'),
+          buildSwitchListTile('Repeat'),
         ],
       ),
     );
   }
-
-// conten tab 2
 }
 
 class ClockExpansionTile extends StatefulWidget {
@@ -426,12 +567,6 @@ class _ClockExpansionTileState extends State<ClockExpansionTile> {
       _isExpanded = true;
     });
   }
-
-  // void collapse() {
-  //   setState(() {
-  //     _isExpanded = false;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -498,6 +633,7 @@ class _RunningDigitalClockState extends State<RunningDigitalClock> {
     );
   }
 }
+
 class NewScreen extends StatelessWidget {
   final ClockType selectedClockType;
 
@@ -521,12 +657,14 @@ class NewScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        color: Colors.black,
-        child: Center(
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
+          ),
+          child: Center(
             child: clockWidget,
           ),
         ),
