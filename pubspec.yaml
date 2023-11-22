@@ -121,13 +121,7 @@ flutter:
     - assets/images/classic_clock_hour.png
     - assets/images/classic_clock_minute.png
     - assets/images/classic_clock_second.png
-    #--------------------------------------------
-    - assets/images/hinh_nen_1.gif
-    - assets/images/hinh_nen_2.gif
-    - assets/images/hinh_nen_3.gif
-    - assets/images/hinh_nen_4.gif
-    - assets/images/hinh_nen_5.gif
-    - assets/images/hinh_nen_6.gif
+
 
   #Mali font added by @wTieen. w! ---------------------------------
   fonts:
