@@ -21,6 +21,7 @@ samples, guidance on mobile development, and a full API reference.
 
 
 #Note by Hieu _____________________________________________________________________________________
++ Terminal: --- [ flutter pub get intl ]
 
 
 
