@@ -7,86 +7,53 @@ import '../data/database_time.dart';
 import '../pages/HomePage.dart';
 import '../pages/ClockPage.dart';
 import '../pages/AlarmPage.dart';
-import '../pages/StopwatchPage_History.dart';
+import '../pages/StopwatchPage.dart';
 import '../pages/TimerPage.dart';
 
 enum ClockType { hour, digital, classic }
 
-class StopwatchPage extends StatefulWidget {
+class StopwatchPageHistory extends StatefulWidget {
   @override
-  StopwatchPageState createState() => StopwatchPageState();
+  StopwatchPageHistoryState createState() => StopwatchPageHistoryState();
 }
 
-class StopwatchPageState extends State<StopwatchPage> {
-  // //stopwatch
-  // int seconds = 0, minutes = 0, hours = 0;
-  // String digitSeconds = '00', digitMinutes = '00', digitHours = '00';
-  // Timer? timer;
-  // bool started = false;
-  // List laps = [];
-  //
-  // // Creating the stop timer function
-  // void stop(){
-  //   timer!.cancel();
-  //   setState(() {
-  //     started = false;
-  //   });
-  // }
-  //
-  // // Creating the reset function
-  //
-  // void reset(){
-  //   timer!.cancel();
-  //   setState(() {
-  //     seconds = 0;
-  //     minutes = 0;
-  //     hours = 0;
-  //
-  //     digitSeconds ='00';
-  //     digitMinutes ='00';
-  //     digitHours ='00';
-  //
-  //     started = false;
-  //   });
-  // }
-  //
-  // void addLaps(){
-  //   String lap = '$digitHours:$digitMinutes:$digitSeconds';
-  //   setState(() {
-  //     laps.add(lap);
-  //   });
-  // }
-  //
-  // //creating the start timer function
-  // void start(){
-  //   started = true;
-  //   timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-  //     int localSeconds = seconds + 1;
-  //     int localMinutes = minutes;
-  //     int localHours = hours;
-  //
-  //     if(localSeconds > 59){
-  //       if (localMinutes > 59){
-  //         localHours++;
-  //         localMinutes = 0;
-  //       }else{
-  //         localMinutes++;
-  //         localSeconds = 0;
-  //       }
-  //     }
-  //     setState(() {
-  //       seconds = localSeconds;
-  //       minutes = localMinutes;
-  //       hours = localHours;
-  //       digitSeconds = (seconds >= 10) ?'$seconds':'0$seconds';
-  //       digitHours = (hours >= 10) ?'$hours':'0$hours';
-  //       digitMinutes = (minutes >= 10) ?'$minutes':'0$minutes';
-  //     });
-  //   });
-  // }
-  //
+class StopwatchPageHistoryState extends State<StopwatchPageHistory> {
+  Color color = Colors.grey;
+  late String text;
 
+  List<Color> targetValueColor = [
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+  ];
 
+  List<String> recordsValue = [
+    '00:01:34',
+    '00:05:31',
+    '00:07:04',
+    '00:08:00',
+    '00:11:11',
+    '00:21:02',
+    '00:32:33',
+    '01:02:01',
+    '01:22:45',
+    '02:32:13',
+    '02:56:38',
+    '02:59:01',
+    '03:30:01',
+    '03:45:18',
+  ];
 
   // bool isSelected = false;
   final GlobalKey<_ClockExpansionTileState> _expansionTileKey =
@@ -96,6 +63,11 @@ class StopwatchPageState extends State<StopwatchPage> {
   // String? selectedValue;
   List<String> dropdownItems = ['Number clock', 'Analog clock', 'Old clock'];
 
+  // void itemSwitch(bool value) {
+  //   setState(() {
+  //     isSelected = !isSelected;
+  //   });
+  // }
 // thêm tập key and value
   final Map<String, bool> switches = {
     '24 hour format': false,
@@ -186,7 +158,7 @@ class StopwatchPageState extends State<StopwatchPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomePage(),
+                                builder: (context) => StopwatchPage(),
                               ),
                             );
                           },
@@ -203,87 +175,58 @@ class StopwatchPageState extends State<StopwatchPage> {
                         height: 165,
                         width: 165,
                         child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NewScreen(
-                                    selectedClockType: _selectedClockType,
-                                    // updateTextValue(''),
-                                  ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NewScreen(
+                                  selectedClockType: _selectedClockType,
+                                  // updateTextValue(''),
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow,
-                              foregroundColor: Colors.black,
-                              minimumSize: const Size(165, 165),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
                               ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                            foregroundColor: Colors.black,
+                            minimumSize: const Size(165, 165),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            child: const Text(
-                              '00:00:00',
-                              style: TextStyle(fontSize: 30),
-                            )),
+                          ),
+                            child: const Text('00:00:00', style: TextStyle(fontSize: 30),)
+                        ),
                       ),
                     ],
                   )),
                   Container(
                       color: Colors.black,
                       height: 1080,
-                      width: 440,
+                      width: 450,
                       alignment: Alignment.bottomCenter,
-                      child:
-                      Column(children: [
-                        Row(children: [
-                          Container(
-                            // height: ,
-                            width: 220,
-                            alignment: Alignment.topCenter,
-                            child:
-                                // ListView.builder(
-                                //   itemCount: laps.length,
-                                //   itemBuilder: (context, index)
-                                //   {
-                                //     return const Padding(padding: EdgeInsets.all(8),
-                                //     child: Row(
-                                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //       children: [
-                                //         Text(
-                                //           "Lpa"
-                                //         )
-                                //       ],
-                                //     ),
-                                //     );
-                                //   },
-                                // )
-
-                            Column(
-                              children: [
-                                buildDropdownButton(),
-                                buildTab1SwitchesColumn(),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            // height: ,
-                            width: 220,
-                            alignment: Alignment.topCenter,
-                            child:
-                            Column(
-                              children: [
-                                buildTab1SwitchesColumnRight(),
-                              ],
-                            ),
-                          ),
-                        ]),
-
-
-
-
-                        const SizedBox(height: 25),
-                        tabButton(),
+                      child: Column(children: [
+                        Title(),
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                // color: Colors.red,
+                                height: 300,
+                                width: 320,
+                                alignment: Alignment.topLeft,
+                                child: buildTargetList(),
+                              ),
+                              Container(
+                                // color: Colors.red,
+                                height: 300,
+                                width: 120,
+                                alignment: Alignment.topCenter,
+                                child: BuildDrapList(),
+                              ),
+                            ]),
+                        // const SizedBox(height: 25),
+                        // tabButton(),
                       ])),
                 ],
               ),
@@ -292,6 +235,118 @@ class StopwatchPageState extends State<StopwatchPage> {
         ),
       ),
     );
+  }
+
+  Widget buildTargetList() {
+    return Expanded(
+        child: Container(
+      width: 320,
+      // height: 50,
+      child: ListView.builder(
+        itemCount: recordsValue.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildTarget(index),
+                Text(recordsValue[index],
+                    style: TextStyle(color: Colors.white)),
+              Text(recordsValue[index],
+                  style: TextStyle(color: Colors.white)),
+              ],
+            ),
+          );
+        },
+      ),
+    ));
+  }
+
+  Widget buildTarget(i) {
+    return DragTarget<Color>(
+      onAccept: (data) => setState(() => targetValueColor[i] = data),
+      builder: (context, _, __) => buildDragTarget(i),
+      onWillAccept: (data) {
+        // Trả về true nếu vùng chấp nhận dữ liệu
+        return true;
+      },
+    );
+  }
+
+  Widget buildDragTarget(i) {
+    return Container(
+      margin: EdgeInsets.all(4),
+      width: 120,
+      height: 30,
+      decoration: BoxDecoration(
+        color: targetValueColor[i],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: null,
+    );
+  }
+
+  Widget BuildDrapList() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        BuildDrap('Study', Colors.blue),
+        BuildDrap('Deadline', Colors.red),
+        BuildDrap('Amuse', Colors.amber),
+        BuildDrap('Listen music', Colors.pink),
+        BuildDrap('English', Colors.green),
+        BuildDrap('Cry', Colors.purple),
+      ],
+    );
+  }
+
+  Widget BuildDrap(text, color) {
+    return Draggable<Color>(
+      data: color,
+      feedback: Material(
+        borderRadius: BorderRadius.circular(10),
+        child: buildText(text, color),
+      ),
+      child: buildText(text, color),
+    );
+  }
+
+  Widget buildText(String text, Color color) => Container(
+        alignment: Alignment.center,
+        width: 120,
+        height: 30,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10), // Đặt giá trị bo tròn tùy ý
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+      );
+
+  Widget RecordList() {
+    return ListView.builder(
+        itemExtent: 40,
+        itemCount: recordsValue.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(recordsValue[index]),
+            textColor: Colors.white,
+          );
+        });
+  }
+
+  Widget Title() {
+    return const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text('Types', style: TextStyle(color: Colors.white)),
+          Text('Records', style: TextStyle(color: Colors.white)),
+          Text('Total', style: TextStyle(color: Colors.white)),
+          Text('My Types', style: TextStyle(color: Colors.white)),
+        ]);
   }
 
   Widget tabButton() {
@@ -592,7 +647,6 @@ class _RunningDigitalClockState extends State<RunningDigitalClock> {
     );
   }
 }
-
 class NewScreen extends StatelessWidget {
   final ClockType selectedClockType;
 
@@ -635,6 +689,7 @@ class NewScreen extends StatelessWidget {
     );
   }
 }
+
 
 class DigitalClockWidget extends StatefulWidget {
   @override
