@@ -5,11 +5,11 @@ import 'package:sqflite/sqflite.dart';
 
 
 
-class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+class DatabaseHelper_alarm_list {
+  static final DatabaseHelper_alarm_list instance = DatabaseHelper_alarm_list._privateConstructor();
   static Database? _database;
 
-  DatabaseHelper._privateConstructor();
+  DatabaseHelper_alarm_list._privateConstructor();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -18,54 +18,54 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'task_new_database.db');
+    String path = join(await getDatabasesPath(), 'alarm_new_database.db');
     return await openDatabase(path, version: 1, onCreate: _createDb);
   }
 
   Future<void> _createDb(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE task_table(
+      CREATE TABLE alarm_table(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        taskName TEXT,
-        taskTime TEXT,
-        taskStatus INTEGER
+        alarmName TEXT,
+        alarmTime TEXT,
+        alarmStatus INTEGER
       )
     ''');
   }
-  Future<int> insertTask(AlarmTile task) async {
+  Future<int> insertAlarm(AlarmTile alarm) async {
     try {
       Database db = await instance.database;
 
-      print("Inserting task_table: ${task.toMap()}");
+      print("Inserting alarm_table: ${alarm.toMap()}");
 
-      int result = await db.insert('task_table', task.toMap());
+      int result = await db.insert('alarm_table', alarm.toMap());
 
       print("Insert result: $result");
 
       return result;
     } catch (e) {
-      print("Error inserting task_table: $e");
+      print("Error inserting alarm_table: $e");
       return -1; // Trả về giá trị âm để báo lỗi
     }
   }
   // Bằng cách này, bạn có thể xem thông điệp từ các dòng log và xác định nguyên nhân gây ra vấn đề.
 
-  Future<List<AlarmTile>> getAllTasks() async {
+  Future<List<AlarmTile>> getAllAlarms() async {
     Database db = await instance.database;
-    List<Map<String, dynamic>> maps = await db.query('task_table');
+    List<Map<String, dynamic>> maps = await db.query('alarm_table');
     return List.generate(maps.length, (index) {
       return AlarmTile.fromMap(maps[index]);
     });
   }
 
-  Future<int> updateTask(AlarmTile task) async {
+  Future<int> updateAlarm(AlarmTile alarm) async {
     Database db = await instance.database;
-    return await db.update('task_table', task.toMap(),
-        where: 'id = ?', whereArgs: [task.id]);
+    return await db.update('alarm_table', alarm.toMap(),
+        where: 'id = ?', whereArgs: [alarm.id]);
   }
 
-  Future<int> deleteTask(int? id) async {
+  Future<int> deleteAlarm(int? id) async {
     Database db = await instance.database;
-    return await db.delete('task_table', where: 'id = ?', whereArgs: [id]);
+    return await db.delete('alarm_table', where: 'id = ?', whereArgs: [id]);
   }
 }

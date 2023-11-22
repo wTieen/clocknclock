@@ -25,113 +25,91 @@ class AlarmPageState extends State<AlarmPage> {
   var hour = 10;
   var minute = 0;
   var timeFormat = "AM";
-  DateTime _taskTime = DateTime.now();
+  DateTime _alarmTime = DateTime.now();
 
-  DatabaseHelper dbHelper = DatabaseHelper.instance;
-  List<AlarmTile> tasks = [];
+  DatabaseHelper_alarm_list dbHelper = DatabaseHelper_alarm_list.instance;
+  List<AlarmTile> alarms = [];
   final _controller = TextEditingController();
 
-  void saveNewTask() async {
-    AlarmTile newTask = AlarmTile(
-      taskName: _controller.text,
-      taskTime: '$hour : $minute',
-      taskStatus: false,
+  void saveNewAlarm() async {
+    AlarmTile newAlarm = AlarmTile(
+      alarmName: _controller.text,
+      alarmTime: '$hour : $minute',
+      alarmStatus: false,
       deleteFunction: (BuildContext) {},
       onChanged: (BuildContext) {},
     );
     _controller.clear();
-    await dbHelper.insertTask(newTask);
-    _getTasks();
+    await dbHelper.insertAlarm(newAlarm);
+    _getAlarms();
     Navigator.of(context).pop();
   }
 
-  void createNewTask() async {
+  void createNewAlarm() async {
     showDialog(
       context: context,
       builder: (context) {
         return DialogBox(
           controller: _controller,
-          onSave: saveNewTask,
+          onSave: saveNewAlarm,
           onCancel: () => Navigator.of(context).pop(),
         );
       },
     );
   }
-
-  // bool isSelected = false;
   final GlobalKey<_ClockExpansionTileState> _expansionTileKey =
-      GlobalKey<_ClockExpansionTileState>();
-  ClockType _selectedClockType = ClockType.digital;
-
-  // String? selectedValue;
-  List<String> dropdownItems = ['Number clock', 'Analog clock', 'Old clock'];
+  GlobalKey<_ClockExpansionTileState>();
 
 // thêm tập key and value
   final Map<String, bool> switches = {
-    '24 hour format': false,
-    'Seconds': false,
-    'Music': false,
-    'Auto time': false,
-    'Auto time-zone': false,
-    'Todo list': false,
-    'Mascot': false,
+    'Sound': true,
+    'Quiver': false,
+    'Snooze': false,
+    'Repeat': false,
   };
-  String textValue = 'Number clock';
-
   @override
   void initState() {
     super.initState();
-    loadData();
-    _getTasks();
+    loadData_switch();
+    _getAlarms();
   }
 
-  void _getTasks() async {
-    tasks = await dbHelper.getAllTasks();
+  void _getAlarms() async {
+    alarms = await dbHelper.getAllAlarms();
     setState(() {});
   }
 
-  Future<void> loadData() async {
+  Future<void> loadData_switch() async {
+    print('Đây là khi vào load trong alarm');
     // Load switch states
     for (var key in switches.keys) {
-      bool value = await DatabaseHelper_time.instance.getSwitchValue(key);
+      bool value = await DatabaseHelper_alarm_switch.instance.getSwitchValue(key);
       setState(() {
         switches[key] = value;
+        print('This for alarm menu');
         print("$key : $value");
       });
     }
-
     // Load text value
-    String savedText = await DatabaseHelper_time.instance.getTextValue();
-    setState(() {
-      textValue = savedText;
-    });
   }
 
   void updateSwitchState(String key, bool value) {
-    print('Update come in');
+    print('Update come in alarm');
     setState(() {
       switches[key] = value;
       print("This is in update $key : $value");
       print('Update in setState');
     });
-    DatabaseHelper_time.instance.updateSwitch(key, value);
+    DatabaseHelper_alarm_switch.instance.updateSwitch(key, value);
     print('Update outside');
-    loadData();
-  }
-
-  void updateTextValue(String value) {
-    setState(() {
-      textValue = value;
-    });
-    DatabaseHelper_time.instance.updateText(value);
+    loadData_switch();
   }
 
   @override
   void dispose() {
     switches.forEach((key, value) async {
-      await DatabaseHelper_time.instance.updateSwitch(key, value);
+      await DatabaseHelper_alarm_switch.instance.updateSwitch(key, value);
     });
-    DatabaseHelper_time.instance.updateText(textValue!);
     super.dispose();
   }
 
@@ -183,11 +161,11 @@ class AlarmPageState extends State<AlarmPage> {
                           width: 165,
                           child: ElevatedButton(
                             onPressed: () {
-                              createNewTask();
+                              createNewAlarm();
                               if (timeFormat == 'PM') {
                                 hour += 12;
                               }
-                              _taskTime = DateTime(
+                              _alarmTime = DateTime(
                                 DateTime.now().year,
                                 DateTime.now().month,
                                 DateTime.now().day,
@@ -195,7 +173,7 @@ class AlarmPageState extends State<AlarmPage> {
                                 minute,
                               );
                               if (hour <= DateTime.now().hour) {
-                                _taskTime = _taskTime.add(Duration(days: 1));
+                                _alarmTime = _alarmTime.add(Duration(days: 1));
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -241,9 +219,9 @@ class AlarmPageState extends State<AlarmPage> {
                                         decoration: const BoxDecoration(
                                           border: Border(
                                             top:
-                                                BorderSide(color: Colors.black),
+                                            BorderSide(color: Colors.black),
                                             bottom:
-                                                BorderSide(color: Colors.black),
+                                            BorderSide(color: Colors.black),
                                           ),
                                         ),
                                       ),
@@ -274,9 +252,9 @@ class AlarmPageState extends State<AlarmPage> {
                                         decoration: const BoxDecoration(
                                           border: Border(
                                             top:
-                                                BorderSide(color: Colors.black),
+                                            BorderSide(color: Colors.black),
                                             bottom:
-                                                BorderSide(color: Colors.black),
+                                            BorderSide(color: Colors.black),
                                           ),
                                         ),
                                       ),
@@ -308,24 +286,24 @@ class AlarmPageState extends State<AlarmPage> {
                               width: 440,
                               padding: EdgeInsets.all(4),
                               child: ListView.builder(
-                                itemCount: tasks.length,
+                                itemCount: alarms.length,
                                 itemBuilder: (context, index) {
-                                  AlarmTile task = tasks[index];
+                                  AlarmTile alarm = alarms[index];
                                   return AlarmTile(
-                                    taskName: task.taskName,
-                                    taskStatus: task.taskStatus,
-                                    taskTime: task.taskTime,
+                                    alarmName: alarm.alarmName,
+                                    alarmStatus: alarm.alarmStatus,
+                                    alarmTime: alarm.alarmTime,
                                     onChanged: (value) {
                                       setState(() {
-                                        task.taskStatus = !task.taskStatus;
-                                        dbHelper.updateTask(task);
-                                        _getTasks();
+                                        alarm.alarmStatus = !alarm.alarmStatus;
+                                        dbHelper.updateAlarm(alarm);
+                                        _getAlarms();
                                       });
                                     },
                                     deleteFunction: (context) {
                                       setState(() {
-                                        dbHelper.deleteTask(task.id);
-                                        _getTasks();
+                                        dbHelper.deleteAlarm(alarm.id);
+                                        _getAlarms();
                                       });
                                     },
                                   );
@@ -419,9 +397,9 @@ class AlarmPageState extends State<AlarmPage> {
             foregroundColor: Colors.white,
             minimumSize: const Size(100, 45),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-                    // , side: const BorderSide(color: Colors.white, width: 2)
-                    ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
+              // , side: const BorderSide(color: Colors.white, width: 2)
+            ),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_stopwatch.svg'),
@@ -441,9 +419,9 @@ class AlarmPageState extends State<AlarmPage> {
             foregroundColor: Colors.white,
             minimumSize: const Size(100, 45),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-                    // , side: const BorderSide(color: Colors.white, width: 2)
-                    ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
+              // , side: const BorderSide(color: Colors.white, width: 2)
+            ),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_timer.svg'),
@@ -453,45 +431,45 @@ class AlarmPageState extends State<AlarmPage> {
     );
   }
 
-  Widget buildDropdownButton() {
-    return Container(
-      // height: 1080,
-      width: 230,
-      alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          DropdownButton<String>(
-            hint: const Text('Number clock',
-                style: TextStyle(color: Colors.grey)),
-            underline: Container(),
-            icon: SvgPicture.asset('assets/images/icon_arrowDown.svg'),
-            padding: const EdgeInsets.only(top: 10, left: 15, right: 30),
-            isExpanded: true,
-            dropdownColor: Colors.black,
-            style: const TextStyle(
-              inherit: false,
-              fontFamily: 'Mali',
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-            ),
-            value: textValue,
-            items: dropdownItems.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                textValue = newValue!;
-                updateTextValue(textValue);
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget buildDropdownButton() {
+  //   return Container(
+  //     // height: 1080,
+  //     width: 230,
+  //     alignment: Alignment.topCenter,
+  //     child: Column(
+  //       children: [
+  //         DropdownButton<String>(
+  //           hint: const Text('Number clock',
+  //               style: TextStyle(color: Colors.grey)),
+  //           underline: Container(),
+  //           icon: SvgPicture.asset('assets/images/icon_arrowDown.svg'),
+  //           padding: const EdgeInsets.only(top: 10, left: 15, right: 30),
+  //           isExpanded: true,
+  //           dropdownColor: Colors.black,
+  //           style: const TextStyle(
+  //             inherit: false,
+  //             fontFamily: 'Mali',
+  //             fontWeight: FontWeight.w500,
+  //             fontSize: 16,
+  //           ),
+  //           value: textValue,
+  //           items: dropdownItems.map((String value) {
+  //             return DropdownMenuItem<String>(
+  //               value: value,
+  //               child: Text(value),
+  //             );
+  //           }).toList(),
+  //           onChanged: (newValue) {
+  //             setState(() {
+  //               textValue = newValue!;
+  //               // updateTextValue(textValue);
+  //             });
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget buildSwitchListTile(String title) {
     return ListTile(
@@ -511,18 +489,18 @@ class AlarmPageState extends State<AlarmPage> {
     );
   }
 
-  Widget buildTab2SwitchesColumn() {
-    return Container(
-      width: 220,
-      child: Column(
-        children: [
-          buildSwitchListTile('24 hour format'),
-          buildSwitchListTile('Seconds'),
-          buildSwitchListTile('Music'),
-        ],
-      ),
-    );
-  }
+  // Widget buildTab2SwitchesColumn() {
+  //   return Container(
+  //     width: 220,
+  //     child: Column(
+  //       children: [
+  //         buildSwitchListTile('24 hour format'),
+  //         buildSwitchListTile('Seconds'),
+  //         buildSwitchListTile('Music'),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget buildTab2SwitchesColumnRight() {
     return Container(
@@ -531,6 +509,7 @@ class AlarmPageState extends State<AlarmPage> {
       child: Column(
         children: [
           buildSwitchListTile('Sound'),
+
           buildSwitchListTile('Quiver'),
           buildSwitchListTile('Snooze'),
           buildSwitchListTile('Repeat'),

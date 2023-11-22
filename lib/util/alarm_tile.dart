@@ -4,18 +4,18 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AlarmTile extends StatelessWidget {
   int? id; // ID của công việc
-  String taskName; // Tên công việc
-  String taskTime; // Thời gian hoàn thành
-  bool taskStatus; // Trạng thái hoàn thành hay chưa
+  String alarmName; // Tên công việc
+  String alarmTime; // Thời gian hoàn thành
+  bool alarmStatus; // Trạng thái hoàn thành hay chưa
 
   Function(BuildContext)? deleteFunction;
   Function(bool?)? onChanged;
 
   AlarmTile({
     this.id,
-    required this.taskName,
-    required this.taskTime,
-    required this.taskStatus,
+    required this.alarmName,
+    required this.alarmTime,
+    required this.alarmStatus,
     required this.deleteFunction,
     required this.onChanged,
   });
@@ -23,18 +23,18 @@ class AlarmTile extends StatelessWidget {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'taskName': taskName,
-      'taskTime': taskTime,
-      'taskStatus': taskStatus ? 1 : 0,
+      'alarmName': alarmName,
+      'alarmTime': alarmTime,
+      'alarmStatus': alarmStatus ? 1 : 0,
     };
   }
 
   factory AlarmTile.fromMap(Map<String, dynamic> map) {
     return AlarmTile(
       id: map['id'],
-      taskName: map['taskName'],
-      taskTime: map['taskTime'],
-      taskStatus: map['taskStatus'] == 1,
+      alarmName: map['alarmName'],
+      alarmTime: map['alarmTime'],
+      alarmStatus: map['alarmStatus'] == 1,
       onChanged: (BuildContext) {},
       deleteFunction: (BuildContext) {},
     );
@@ -59,7 +59,7 @@ class AlarmTile extends StatelessWidget {
         width: 200,
         padding: const EdgeInsets.all(5),
         child: OutlinedButton(
-            // Code Thiết kế task to do
+          // Code Thiết kế task to do
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
               // minimumSize: const Size(200, 10),
@@ -71,7 +71,7 @@ class AlarmTile extends StatelessWidget {
               print('click task');
             },
             child: Row(
-                // mainAxisAlignment: MainAxisAlignment.end,
+              // mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +82,7 @@ class AlarmTile extends StatelessWidget {
                           width: 80,
                           alignment: Alignment.center,
                           child: Text(
-                            '$taskTime',
+                            '$alarmTime',
                             style: const TextStyle(
                               fontSize: 20,
                             ),
@@ -92,11 +92,11 @@ class AlarmTile extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 4),
                             width: 50,
                             child: Text(
-                              taskName,
+                              alarmName,
                               style: TextStyle(
                                   overflow: TextOverflow.clip,
                                   fontSize: 10,
-                                  color: taskStatus
+                                  color: alarmStatus
                                       ? Colors.white60
                                       : Colors.white38),
                             )),
@@ -105,7 +105,7 @@ class AlarmTile extends StatelessWidget {
                     scale: 0.8,
                     alignment: Alignment.centerRight,
                     child: Switch(
-                      value: taskStatus ?? false,
+                      value: alarmStatus ?? false,
                       onChanged: onChanged,
                       inactiveTrackColor: Colors.grey,
                       activeTrackColor: Colors.yellow,

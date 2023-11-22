@@ -1,14 +1,14 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DatabaseHelper_time {
-  static const String databaseName = 'newdata.db';
-  static const String switchTable = 'switch_table';
-  static const String textTable = 'text_table';
-  static final DatabaseHelper_time instance = DatabaseHelper_time._privateConstructor();
+class DatabaseHelper_alarm_switch {
+  static const String databaseName = 'newdata_alarm.db';
+  static const String switchTable = 'switch_alarm_one';
+  static final DatabaseHelper_alarm_switch instance = DatabaseHelper_alarm_switch
+      ._privateConstructor();
   late Database _database;
 
-  DatabaseHelper_time._privateConstructor();
+  DatabaseHelper_alarm_switch._privateConstructor();
 
   Future<Database> get database async {
     _database = await _initDatabase();
@@ -31,58 +31,32 @@ class DatabaseHelper_time {
         )
       ''');
 
-        await db.execute('''
-        CREATE TABLE $textTable (
-          id INTEGER PRIMARY KEY,
-          text_value TEXT
-        )
-      ''');
 
         // Thêm dữ liệu mẫu khi cơ sở dữ liệu rỗng
-        var switchTableCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $switchTable'));
-        var textTableCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $textTable'));
+        var switchTableCount = Sqflite.firstIntValue(
+            await db.rawQuery('SELECT COUNT(*) FROM $switchTable'));
 
-        if (switchTableCount == 0 && textTableCount == 0) {
+        if (switchTableCount == 0) {
           // Sử dụng batch để chèn nhiều dòng dữ liệu cùng một lúc
           var batch = db.batch();
           batch.insert(
             switchTable,
-            {'switch_key': '24 hour format', 'switch_value': 0},
+            {'switch_key': 'Sound', 'switch_value': 0},
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
           batch.insert(
             switchTable,
-            {'switch_key': 'Seconds', 'switch_value': 0},
+            {'switch_key': 'Quiver', 'switch_value': 0},
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
           batch.insert(
             switchTable,
-            {'switch_key': 'Music', 'switch_value': 0},
+            {'switch_key': 'Snooze', 'switch_value': 0},
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
           batch.insert(
             switchTable,
-            {'switch_key': 'Auto time', 'switch_value': 0},
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          );
-          batch.insert(
-            switchTable,
-            {'switch_key': 'Auto time-zone', 'switch_value': 0},
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          );
-          batch.insert(
-            switchTable,
-            {'switch_key': 'Todo list', 'switch_value': 0},
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          );
-          batch.insert(
-            switchTable,
-            {'switch_key': 'Mascot', 'switch_value': 0},
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          );
-          batch.insert(
-            textTable,
-            {'id': 1, 'text_value': 'Number clock'},
+            {'switch_key': 'Repeat', 'switch_value': 0},
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
 
@@ -93,15 +67,6 @@ class DatabaseHelper_time {
     );
   }
 
-
-  // Future<void> updateSwitch(String key, bool value) async {
-  //   final db = await database;
-  //   await db.insert(
-  //     switchTable,
-  //     {'switch_key': key, 'switch_value': value ? 1 : 0},
-  //     conflictAlgorithm: ConflictAlgorithm.replace,
-  //   );
-  // }
   Future<void> updateSwitch(String key, bool value) async {
     final db = await database;
     int switchValue = value ? 1 : 0;
@@ -115,12 +80,6 @@ class DatabaseHelper_time {
     );
   }
 
-  // Future<int> updateTask(String key, bool value) async {
-  //   final db = await database;
-  //   return await db.update('taskss', task.toMap(),
-  //       where: 'id = ?', whereArgs: [task.id]);
-  // }
-
   Future<bool> getSwitchValue(String key) async {
     final db = await database;
     List<Map<String, dynamic>> result = await db.query(
@@ -130,24 +89,5 @@ class DatabaseHelper_time {
       limit: 1,
     );
     return result.isNotEmpty ? result.first['switch_value'] == 1 : false;
-  }
-
-  Future<void> updateText(String value) async {
-    final db = await database;
-    await db.rawInsert(
-      'INSERT OR REPLACE INTO $textTable (id, text_value) VALUES (?, ?)',
-      [1, value],
-    );
-  }
-
-  Future<String> getTextValue() async {
-    final db = await database;
-    List<Map<String, dynamic>> result = await db.query(
-      textTable,
-      where: 'id = ?',
-      whereArgs: [1],
-      limit: 1,
-    );
-    return result.isNotEmpty ? result.first['text_value'] : '';
   }
 }
