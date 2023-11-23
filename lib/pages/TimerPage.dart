@@ -2,34 +2,23 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../data/database_time.dart';
 import '../pages/HomePage.dart';
 import '../pages/ClockPage.dart';
 import '../pages/StopwatchPage.dart';
 import '../pages/AlarmPage.dart';
 
-enum ClockType { hour, digital, classic }
-
+enum ClockType { hour, timer,counting_time }
 class TimerPage extends StatefulWidget {
   @override
   TimerPageState createState() => TimerPageState();
 }
 
 class TimerPageState extends State<TimerPage> {
-  // bool isSelected = false;
   final GlobalKey<_ClockExpansionTileState> _expansionTileKey =
-      GlobalKey<_ClockExpansionTileState>();
-  ClockType _selectedClockType = ClockType.digital;
+  GlobalKey<_ClockExpansionTileState>();
+  ClockType _selectedClockType = ClockType.timer;
+  List<String> dropdownItems = ['Number clock', 'Timer', 'Counting time'];
 
-  // String? selectedValue;
-  List<String> dropdownItems = ['Number clock', 'Analog clock', 'Old clock'];
-
-  // void itemSwitch(bool value) {
-  //   setState(() {
-  //     isSelected = !isSelected;
-  //   });
-  // }
 // thêm tập key and value
   final Map<String, bool> switches = {
     '24 hour format': false,
@@ -40,58 +29,6 @@ class TimerPageState extends State<TimerPage> {
     'Todo list': false,
     'Mascot': false,
   };
-  String textValue = 'Number clock';
-
-  @override
-  void initState() {
-    super.initState();
-    loadData();
-  }
-
-  Future<void> loadData() async {
-    // Load switch states
-    for (var key in switches.keys) {
-      bool value = await DatabaseHelper_time.instance.getSwitchValue(key);
-      setState(() {
-        switches[key] = value;
-        print("$key : $value");
-      });
-    }
-
-    // Load text value
-    String savedText = await DatabaseHelper_time.instance.getTextValue();
-    setState(() {
-      textValue = savedText;
-    });
-  }
-
-  void updateSwitchState(String key, bool value) {
-    print('Update come in');
-    setState(() {
-      switches[key] = value;
-      print("This is in update $key : $value");
-      print('Update in setState');
-    });
-    DatabaseHelper_time.instance.updateSwitch(key, value);
-    print('Update outside');
-    loadData();
-  }
-
-  void updateTextValue(String value) {
-    setState(() {
-      textValue = value;
-    });
-    DatabaseHelper_time.instance.updateText(value);
-  }
-
-  @override
-  void dispose() {
-    switches.forEach((key, value) async {
-      await DatabaseHelper_time.instance.updateSwitch(key, value);
-    });
-    DatabaseHelper_time.instance.updateText(textValue!);
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,62 +46,62 @@ class TimerPageState extends State<TimerPage> {
                 children: [
                   Expanded(
                       child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        color: Colors.black,
-                        height: 1080,
-                        width: 300,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage(),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: null,
-                        ),
-                      ),
-                      Container(
-                        height: 165,
-                        width: 165,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NewScreen(
-                                  selectedClockType: _selectedClockType,
-                                  // updateTextValue(''),
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            color: Colors.black,
+                            height: 1080,
+                            width: 300,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomePage(),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow,
-                            foregroundColor: Colors.black,
-                            minimumSize: const Size(165, 165),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                              child: null,
                             ),
                           ),
-                          child: _selectedClockType == ClockType.digital
-                              ? RunningDigitalClock()
-                              : (_selectedClockType == ClockType.hour
-                              ? HourClockWidget()
-                              : ClassicClockWidget()),
-                        ),
-                      ),
-                    ],
-                  )),
+                          Container(
+                            height: 165,
+                            width: 165,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NewScreen(
+                                      selectedClockType: _selectedClockType,
+                                      // updateTextValue(''),
+                                    ),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.yellow,
+                                foregroundColor: Colors.black,
+                                minimumSize: const Size(165, 165),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              child: _selectedClockType == ClockType.timer
+                                  ? RunningDigitalClock()
+                                  : (_selectedClockType == ClockType.hour
+                                  ? Timer_Widget()
+                                  : Counting_time_Widget()),
+                            ),
+                          ),
+                        ],
+                      )),
                   Container(
                       color: Colors.black,
                       height: 1080,
@@ -232,6 +169,7 @@ class TimerPageState extends State<TimerPage> {
             SvgPicture.asset('assets/images/icon_time.svg'),
           ]),
         ),
+
         ElevatedButton(
           onPressed: () {
             Navigator.push(
@@ -246,9 +184,8 @@ class TimerPageState extends State<TimerPage> {
             foregroundColor: Colors.white,
             minimumSize: const Size(100, 45),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-                    // , side: const BorderSide(color: Colors.white, width: 2)
-                    ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
+            ),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_alarm.svg'),
@@ -268,9 +205,8 @@ class TimerPageState extends State<TimerPage> {
             foregroundColor: Colors.white,
             minimumSize: const Size(100, 45),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-                    // , side: const BorderSide(color: Colors.white, width: 2)
-                    ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
+            ),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SvgPicture.asset('assets/images/icon_stopwatch.svg'),
@@ -322,7 +258,6 @@ class TimerPageState extends State<TimerPage> {
               fontWeight: FontWeight.w500,
               fontSize: 16,
             ),
-            value: textValue,
             items: dropdownItems.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -331,17 +266,15 @@ class TimerPageState extends State<TimerPage> {
             }).toList(),
             onChanged: (newValue) {
               setState(() {
-                textValue = newValue!;
                 // Thực hiện xử lý khi giá trị thay đổi
                 if (newValue == 'Number clock') {
-                  _selectedClockType = ClockType.digital;
-                } else if (newValue == 'Analog clock') {
+                  _selectedClockType = ClockType.timer;
+                } else if (newValue == 'Timer') {
                   _selectedClockType = ClockType.hour;
-                } else if (newValue == 'Old clock') {
-                  _selectedClockType = ClockType.classic;
-                }
-              });
-            },
+                } else if (newValue == 'Counting time') {
+                  _selectedClockType = ClockType.counting_time;
+                }});
+              },
           ),
         ],
       ),
@@ -360,16 +293,13 @@ class TimerPageState extends State<TimerPage> {
           scale: 0.8,
           child: Switch(
             value: switches[title] ?? false,
-            onChanged: (value) => updateSwitchState(title, value),
+            onChanged: (value) => (title, value),
             inactiveTrackColor: Colors.grey,
             activeTrackColor: Colors.yellow,
             activeColor: Colors.white,
           ),
         ));
   }
-
-  // conten tab 1 + 3
-  //conten tab 4
 
   Widget buildTab4SwitchesColumn() {
     return Container(
@@ -454,8 +384,7 @@ class _ClockExpansionTileState extends State<ClockExpansionTile> {
           ),
       ],
     );
-  }
-}
+  }}
 
 class RunningDigitalClock extends StatefulWidget {
   @override
@@ -490,8 +419,7 @@ class _RunningDigitalClockState extends State<RunningDigitalClock> {
       _currentTime,
       style: TextStyle(fontSize: 30, color: Colors.black),
     );
-  }
-}
+  }}
 class NewScreen extends StatelessWidget {
   final ClockType selectedClockType;
 
@@ -502,14 +430,11 @@ class NewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget clockWidget;
     switch (selectedClockType) {
-      case ClockType.hour:
-        clockWidget = HourClockWidget();
+      case ClockType.hour: clockWidget = Timer_Widget();
         break;
-      case ClockType.digital:
-        clockWidget = DigitalClockWidget();
+      case ClockType.timer: clockWidget = DigitalClockWidget();
         break;
-      case ClockType.classic:
-        clockWidget = ClassicClockWidget();
+      case ClockType.counting_time: clockWidget = Counting_time_Widget();
         break;
     }
 
@@ -519,15 +444,13 @@ class NewScreen extends StatelessWidget {
         child: Center(
           child: InkWell(
             onTap: () {
-              Navigator.pop(context);
-            },
+              Navigator.pop(context);},
             child: clockWidget,
           ),
         ),
       ),
     );
-  }
-}
+  }}
 
 class DigitalClockWidget extends StatefulWidget {
   @override
@@ -567,133 +490,198 @@ class _DigitalClockWidgetState extends State<DigitalClockWidget> {
         ),
       ),
     );
-  }
+  }}
+
+class Timer_Widget extends StatefulWidget {
+  @override
+  Timer_WidgetState createState() => Timer_WidgetState();
 }
 
-class HourClockWidget extends StatefulWidget {
-  @override
-  _HourClockWidgetState createState() => _HourClockWidgetState();
-}
+class Timer_WidgetState extends State<Timer_Widget> {
+  int hours = 0;
+  int minutes = 0;
+  int seconds = 0;
+  late Timer _timer;
+  bool isRunning = false;
 
-class _HourClockWidgetState extends State<HourClockWidget> {
-  DateTime _currentTime = DateTime.now();
-
-  @override
-  void initState() {
-    super.initState();
-    Timer.periodic(Duration(seconds: 1), (Timer t) {
-      setState(() {
-        _currentTime = DateTime.now();
-      });
-    });
-  }
+  TextEditingController hoursController = TextEditingController();
+  TextEditingController minutesController = TextEditingController();
+  TextEditingController secondsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Container(
-        width: 280.0,
-        height: 280.0,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.black,
-        ),
-        child: Center(
-          child: Stack(
-            children: <Widget>[
-              Image.asset(
-                'assets/images/icon_analog_clock.png',
-                width: 280.0,
-                height: 280.0,
-                fit: BoxFit.cover,
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildClockHand('assets/images/classic_clock_hour.png', hours),
+              _buildText(':'),
+              _buildClockHand('assets/images/classic_clock_minute.png', minutes),
+              _buildText(':'),
+              _buildClockHand('assets/images/classic_clock_second.png', seconds),
+            ],
+          ),
+          SizedBox(height: 2.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (isRunning) {
+                    stopTimer();
+                  } else {
+                    startTimer();
+                  }
+                },
+                child: Text(isRunning ? 'Tạm dừng' : 'Bắt đầu'),
               ),
-              // Kim giờ
-              Positioned(
-                top: 100.0,
-                left: 150.0,
-                child: Transform.rotate(
-                  angle: (_currentTime.hour % 12 + _currentTime.minute / 60) * 2 * 3.1416 / 12,
-                  child: Transform.translate(
-                    offset: const Offset(10.0, 10.0),
-                    child: Image.asset(
-                      'assets/images/needle.png',
-                      width: 10.0,
-                      height: 55.0,
-                      color: Colors.white,
-                      alignment: Alignment.bottomCenter,
-                    ),
-                  ),
-                ),
-              ),
-              // Kim phút
-              Positioned(
-                top: 85.0,
-                left: 124.0,
-                child: Transform.rotate(
-                  angle: _currentTime.minute * 2 * 3.1416 / 60,
-                  child: Transform.translate(
-                    offset: const Offset(10.0, 10.0),
-                    // Điều chỉnh vị trí của kim phút
-                    child: Image.asset('assets/images/needle.png',
-                      width: 20.0,
-                      height: 80.0,
-                      alignment: Alignment.bottomCenter,
-                    ),
-                  ),
-                ),
-              ),
-              // Kim giây
-              Positioned(
-                top: 99.80,
-                left: 145.00,
-                child: Transform.rotate(
-                  angle: _currentTime.second * 2 * 3.1416 / 60,
-                  child: Transform.translate(
-                    offset: const Offset(5.0, 5.0),
-                    // Điều chỉnh vị trí của kim giây
-                    child: Container(
-                      width: 3.50,
-                      height: 100.0,
-                      color: Colors.red,
-                      alignment: Alignment.bottomCenter,
-                    ),
-                  ),
-                ),
+              SizedBox(width: 10.0),
+              ElevatedButton(
+                onPressed: resetTimer,
+                child: Text('Đặt lại'),
               ),
             ],
           ),
+          SizedBox(height: 20.0),
+          _buildTimeInputFields(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClockHand(String imagePath, int value) {
+    return Expanded(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Stack(
+          children: [
+            Image.asset(
+              imagePath,
+              width: 220,
+              height: 220,
+              fit: BoxFit.contain,
+            ),
+            Positioned(
+              top: 40.0,
+              left: 40.0,
+              child: Text(
+                value.toString().padLeft(2, '0'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 100,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
+  Widget _buildText(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 100,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
 
-//Old clock
-class ClassicClockWidget extends StatefulWidget {
-  @override
-  _ClassicClockWidgetState createState() => _ClassicClockWidgetState();
-}
+  Widget _buildTimeInputFields() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildInputField('Hours', hoursController),
+        _buildInputField('Minutes', minutesController),
+        _buildInputField('Seconds', secondsController),
+      ],
+    );
+  }
 
-class _ClassicClockWidgetState extends State<ClassicClockWidget> {
-  late DateTime _currentTime;
-  late Timer _timer;
+  Widget _buildInputField(String label, TextEditingController controller) {
+    return Column(
+      children: [
+        Text(label, style: TextStyle(color: Colors.white)),
+        SizedBox(height: 5.0),
+        SizedBox(
+          width: 80.0,
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.green),
+            decoration: InputDecoration(
+              hintText: '0',
+              hintStyle: TextStyle(color: Colors.greenAccent),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void startTimer() {
+    int countdownHours = int.tryParse(hoursController.text) ?? 0;
+    int countdownMinutes = int.tryParse(minutesController.text) ?? 0;
+    int countdownSeconds = int.tryParse(secondsController.text) ?? 0;
+
+    int totalSeconds = (countdownHours * 3600) + (countdownMinutes * 60) + countdownSeconds;
+
+    if (totalSeconds > 0) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          if (totalSeconds > 0) {
+            totalSeconds--;
+            hours = totalSeconds ~/ 3600;
+            minutes = (totalSeconds ~/ 60) % 60;
+            seconds = totalSeconds % 60;
+          } else {
+            stopTimer();
+          }
+        });
+      });
+
+      setState(() {
+        isRunning = true;
+      });
+    }
+  }
+
+  void stopTimer() {
+    _timer.cancel();
+    setState(() {
+      isRunning = false;
+    });
+  }
+
+  void resetTimer() {
+    setState(() {
+      hours = 0;
+      minutes = 0;
+      seconds = 0;
+      isRunning = false;
+    });
+
+    hoursController.clear();
+    minutesController.clear();
+    secondsController.clear();
+  }
 
   @override
   void initState() {
     super.initState();
-    _updateTime();
-    // Update time every second
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      _updateTime();
-    });
-  }
-
-  void _updateTime() {
-    setState(() {
-      _currentTime = DateTime.now();
-    });
   }
 
   @override
@@ -701,91 +689,96 @@ class _ClassicClockWidgetState extends State<ClassicClockWidget> {
     _timer.cancel();
     super.dispose();
   }
+}
 
+
+
+
+class Counting_time_Widget extends StatefulWidget {
+  @override
+  _CountingTimeWidgetState createState() => _CountingTimeWidgetState();
+}
+
+class _CountingTimeWidgetState extends State<Counting_time_Widget> {
+  late Timer _timer;
+  int _seconds = 0;
+  bool _isRunning = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Stack(
-                children: [
-                  Image.asset(
-                    'assets/images/classic_clock_hour.png',
-                    width: 240,
-                    height: 240,
-                    fit: BoxFit.contain,
-                  ),
-                  Positioned(
-                    top: 5,
-                    left: 5,
-                    child: buildClockText(DateFormat('HH').format(_currentTime)),
-                  ),
-                ],
-              ),
-            ),
+          Text(
+            formatTime(_seconds),
+            style: TextStyle(fontSize: 55, color: Colors.blue),
           ),
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Stack(
-                children: [
-                  Image.asset(
-                    'assets/images/classic_clock_minute.png',
-                    width: 240,
-                    height: 240,
-                    fit: BoxFit.contain,
-                  ),
-                  Positioned(
-                    top: 5,
-                    left: 5,
-                    child: buildClockText(DateFormat('mm').format(_currentTime)),
-                  ),
-                ],
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (!_isRunning) {
+                    startTimer();
+                  } else {
+                    pauseTimer();
+                  }
+                },
+                child: Text(_isRunning ? 'Tạm dừng' : 'Bắt đầu'),
               ),
-            ),
-          ),
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Stack(
-                children: [
-                  Image.asset(
-                    'assets/images/classic_clock_second.png',
-                    width: 240,
-                    height: 240,
-                    fit: BoxFit.contain,
-                  ),
-                  Positioned(
-                    top: 5,
-                    left: 5,
-                    child: buildClockText(DateFormat('ss').format(_currentTime)),
-                  ),
-                ],
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: resetTimer,
+                child: Text('Đặt lại'),
               ),
-            ),
+            ],
           ),
         ],
       ),
     );
   }
 
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _seconds++;
+      });
+    });
 
-  Widget buildClockText(String timeValue) {
-    return Container(
-      padding: EdgeInsets.all(50),
-      child: Text(
-        timeValue,
-        style: TextStyle(
-          color: Colors.white, // Màu chữ của đồng hồ
-          fontSize: 100,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
+    setState(() {
+      _isRunning = true;
+    });
+  }
+
+  void pauseTimer() {
+    _timer.cancel();
+    setState(() {
+      _isRunning = false;
+    });
+  }
+
+  void resetTimer() {
+    _timer.cancel();
+    setState(() {
+      _seconds = 0;
+      _isRunning = false;
+    });
+  }
+
+  String formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }
+
+
+
